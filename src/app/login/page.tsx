@@ -3,10 +3,12 @@
 
 import { useState } from "react";
 import { supabase } from "../../lib/supabase";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,10 +16,12 @@ export default function Login() {
       email,
       password,
     });
+
     if (error) {
-      alert(error.message);
+      alert(error.message); // Tampilkan pesan error
     } else {
       alert("Login Berhasil");
+      router.push("/admin"); // Redirect to admin page after successful login
     }
   };
 

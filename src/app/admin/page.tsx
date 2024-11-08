@@ -1,12 +1,30 @@
 // src/app/admin/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import { useRouter } from "next/navigation";
 
 export default function Admin() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        router.push("/login"); // Redirect to login if not authenticated
+      } else {
+        setLoading(false); // User is authenticated
+      }
+    };
+
+    checkUser();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,6 +37,8 @@ export default function Admin() {
       setContent("");
     }
   };
+
+  if (loading) return <p>Loading...</p>; // Show loading while checking auth
 
   return (
     <form onSubmit={handleSubmit}>
