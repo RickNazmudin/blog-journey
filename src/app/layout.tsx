@@ -1,29 +1,29 @@
 // src/app/layout.tsx
 import React from "react";
-import "./globals.css"; // Jika Anda memiliki file CSS global
+import Link from "next/link";
 
-export const metadata = {
-  title: "My Next.js App",
-  description: "A simple Next.js app with Supabase",
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout() {
   return (
-    <html lang="en">
-      <body>
-        <header>
-          <nav>
-            <a href="/">Home</a>
-            <a href="/login">Login</a>
-            <a href="/admin">Admin</a>
-          </nav>
-        </header>
-        <main>{children}</main>
-      </body>
-    </html>
+    <div>
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <Link href="/">Home</Link>
+            </li>
+            <li>
+              <Link href="/about">About Us</Link>
+            </li>
+            <li>
+              <Link href="/contact">Contact</Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main>{/* Konten utama halaman akan ditampilkan di sini */}</main>
+      <footer>
+        <p>© 2024 Blog Journey. All rights reserved.</p>
+      </footer>
+    </div>
   );
 }

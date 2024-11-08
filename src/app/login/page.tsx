@@ -1,4 +1,6 @@
 // src/app/login/page.tsx
+"use client";
+
 import { useState } from "react";
 import { supabase } from "../../lib/supabase";
 
