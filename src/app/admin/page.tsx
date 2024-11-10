@@ -64,7 +64,7 @@ export default function Admin() {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Judul"
             required
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
           />
         </div>
         <div className="mb-4">
@@ -73,7 +73,7 @@ export default function Admin() {
             onChange={(e) => setContent(e.target.value)}
             placeholder="Konten"
             required
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
             rows={5}
           />
         </div>
@@ -84,7 +84,7 @@ export default function Admin() {
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="nama penulis"
             required
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
           />
         </div>
         <button

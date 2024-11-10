@@ -51,7 +51,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value ?? "")}
               placeholder="Email"
               required
-              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
             />
           </div>
           <div className="mb-4">
@@ -61,7 +61,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value ?? "")}
               placeholder="Password"
               required
-              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
             />
           </div>
           <button
