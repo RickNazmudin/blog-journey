@@ -14,6 +14,9 @@ interface Post {
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [showFullContent, setShowFullContent] = useState<{
+    [key: number]: boolean;
+  }>({});
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -23,6 +26,13 @@ export default function Home() {
 
     fetchPosts();
   }, []);
+
+  const toggleContent = (id: number) => {
+    setShowFullContent((prev) => ({
+      ...prev,
+      [id]: !prev[id], // Toggle state untuk post tertentu
+    }));
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -39,7 +49,8 @@ export default function Home() {
             Instruksi Login
           </h2>
           <p className="text-left text-gray-600 mb-2 italic">
-            Untuk menambahkan tulisan, silahkan login dengan email:
+            Anda bebas menulis apa saja cerita spiritual journey anda, Untuk
+            menambahkan tulisan, silahkan login dengan email:
             <strong> admin@email.com</strong> password:{" "}
             <strong>admin123</strong>
           </p>
@@ -55,11 +66,32 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-green-700 mb-2">
                 {post.title}
               </h2>
-              <p className="text-gray-600">{post.content}</p>
-              <p className="text-gray-500 mt-4">
-                Ditulis oleh: {post.author}
-              </p>{" "}
-              {/* Menampilkan penulis */}
+              <p className="text-gray-600">
+                {showFullContent[post.id]
+                  ? post.content
+                  : `${post.content.substring(0, 150)}...`}
+              </p>
+              {!showFullContent[post.id] && post.content.length > 150 && (
+                <button
+                  onClick={() => toggleContent(post.id)}
+                  className="mt-4 text-blue-500 hover:underline"
+                >
+                  Lanjutkan Membaca
+                </button>
+              )}
+              {showFullContent[post.id] && (
+                <>
+                  <p className="text-gray-500 mt-4">
+                    Ditulis oleh: {post.author}
+                  </p>
+                  <button
+                    onClick={() => toggleContent(post.id)} // Menggunakan fungsi yang sama untuk toggle
+                    className="mt-4 text-red-500 hover:underline"
+                  >
+                    Kembali
+                  </button>
+                </>
+              )}
             </div>
           ))}
         </div>
