@@ -1,10 +1,9 @@
+// src/app/login/page.tsx
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaLeaf } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
@@ -28,9 +27,8 @@ export default function Login() {
 
     if (!data.success) {
       setErrorMessage(data.message);
-      toast.error(data.message); // Menampilkan pesan error
     } else {
-      toast.success("Login Berhasil"); // Menampilkan pesan sukses
+      alert("Login Berhasil");
       localStorage.setItem("token", data.user.access_token); // Sesuaikan jika ada token
       router.push("/admin"); // Arahkan ke halaman admin setelah login berhasil
     }
@@ -78,17 +76,6 @@ export default function Login() {
           <p className="text-gray-500">Embrace Your Spiritual Journey</p>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 }
