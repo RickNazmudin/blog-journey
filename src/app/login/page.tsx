@@ -1,48 +1,94 @@
-// src/app/login/page.tsx
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
 import { useRouter } from "next/navigation";
+import { FaLeaf } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    setErrorMessage(""); // Reset pesan error
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
     });
 
-    if (error) {
-      alert(error.message); // Tampilkan pesan error
+    const data = await response.json();
+
+    if (!data.success) {
+      setErrorMessage(data.message);
+      toast.error(data.message); // Menampilkan pesan error
     } else {
-      alert("Login Berhasil");
-      router.push("/admin"); // Redirect to admin page after successful login
+      toast.success("Login Berhasil"); // Menampilkan pesan sukses
+      localStorage.setItem("token", data.user.access_token); // Sesuaikan jika ada token
+      router.push("/admin"); // Arahkan ke halaman admin setelah login berhasil
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h1>Login</h1>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-blue-100">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+        <h1 className="text-3xl font-bold text-center text-green-800 mb-6">
+          Login
+        </h1>
+        {errorMessage && (
+          <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+        )}
+        <form onSubmit={handleLogin}>
+          <div className="mb-4">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value ?? "")}
+              placeholder="Email"
+              required
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value ?? "")}
+              placeholder="Password"
+              required
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700 transition-colors"
+          >
+            Login
+          </button>
+        </form>
+        <div className="mt-6 text-center">
+          <FaLeaf className="text-4xl text-green-600 mx-auto mb-2" />
+          <p className="text-gray-500">Embrace Your Spiritual Journey</p>
+        </div>
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
       />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      />
-      <button type="submit">Login</button>
-    </form>
+    </div>
   );
 }
