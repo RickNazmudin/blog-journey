@@ -66,7 +66,7 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-green-700 mb-2">
                 {post.title}
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 whitespace-pre-line">
                 {showFullContent[post.id]
                   ? post.content
                   : `${post.content.substring(0, 150)}...`}
