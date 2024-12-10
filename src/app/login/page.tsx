@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaLeaf } from "react-icons/fa";
+import { FaLeaf, FaPen } from "react-icons/fa";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
@@ -13,7 +13,7 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage(""); // Reset pesan error
+    setErrorMessage("");
 
     const response = await fetch("/api/login", {
       method: "POST",
@@ -28,21 +28,33 @@ export default function Login() {
     if (!data.success) {
       setErrorMessage(data.message);
     } else {
-      alert("Login Berhasil");
-      localStorage.setItem("token", data.user.access_token); // Sesuaikan jika ada token
-      router.push("/admin"); // Arahkan ke halaman admin setelah login berhasil
+      localStorage.setItem("token", data.user.access_token);
+      router.push("/admin");
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-blue-100">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-        <h1 className="text-3xl font-bold text-center text-green-800 mb-6">
-          Login
-        </h1>
+        <div className="text-center mb-6">
+          <FaPen className="text-4xl text-green-600 mx-auto mb-3" />
+          <h2 className="text-2xl font-bold text-green-800">
+            Berpartisipasi Menulis
+          </h2>
+          <p className="text-gray-600 mt-2">
+            Bergabunglah dan bagikan inspirasi, cerita, dan pemikiranmu
+          </p>
+          <p>
+            Email : <strong>Admin@email.com</strong>
+            <br />
+            Password : <strong>admin123</strong>
+          </p>
+        </div>
+
         {errorMessage && (
           <p className="text-red-500 text-center mb-4">{errorMessage}</p>
         )}
+
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <input
@@ -68,12 +80,13 @@ export default function Login() {
             type="submit"
             className="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700 transition-colors"
           >
-            Login
+            Masuk untuk Menulis
           </button>
         </form>
+
         <div className="mt-6 text-center">
-          <FaLeaf className="text-4xl text-green-600 mx-auto mb-2" />
-          <p className="text-gray-500">Embrace Your Spiritual Journey</p>
+          <FaLeaf className="text-3xl text-green-600 mx-auto mb-2" />
+          <p className="text-gray-500">Wujudkan Inspirasimu Melalui Tulisan</p>
         </div>
       </div>
     </div>
