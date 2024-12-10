@@ -1,7 +1,7 @@
 // src/app/page.tsx
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { FaLeaf } from "react-icons/fa";
 
@@ -10,6 +10,7 @@ interface Post {
   title: string;
   content: string;
   author: string;
+  updated_at: string;
 }
 
 export default function Home() {
@@ -20,33 +21,24 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const postsPerPage = 6;
-  const pageTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      // Fetch total number of posts
       const { count } = await supabase
         .from("posts")
         .select("*", { count: "exact" });
 
-      // Calculate total pages
       const totalPostCount = count || 0;
       const calculatedTotalPages = Math.ceil(totalPostCount / postsPerPage);
       setTotalPages(calculatedTotalPages);
 
-      // Fetch posts for current page
       const { data } = await supabase
         .from("posts")
         .select("*")
         .range((currentPage - 1) * postsPerPage, currentPage * postsPerPage - 1)
-        .order("id", { ascending: false }); // Sort by newest first
+        .order("id", { ascending: false });
 
       setPosts(data || []);
-
-      // Scroll to top of the page
-      if (pageTopRef.current) {
-        pageTopRef.current.scrollIntoView({ behavior: "smooth" });
-      }
     };
 
     fetchPosts();
@@ -61,11 +53,9 @@ export default function Home() {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    // Reset full content view when changing pages
     setShowFullContent({});
   };
 
-  // Generate page numbers
   const renderPageNumbers = () => {
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -88,9 +78,6 @@ export default function Home() {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      {/* Reference point for scrolling */}
-      <div ref={pageTopRef}></div>
-
       <div className="container mx-auto px-4 py-10">
         <h1 className="text-4xl font-bold text-center text-green-800 mb-8">
           Bagikan Perjalanan Spiritual Anda
@@ -99,19 +86,6 @@ export default function Home() {
           &quot;Setiap langkah dalam perjalanan ini adalah kesempatan untuk
           menemukan diri kita yang sejati.&quot;
         </p>
-        <div className="w-full md:w-1/4 bg-white rounded-lg shadow-md p-4 ml-4 mt-4 md:mt-0">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">
-            Instruksi Login
-          </h2>
-          <p className="text-left text-gray-600 mb-2 italic">
-            Anda bebas menulis apa saja cerita spiritual journey anda, Untuk
-            menambahkan tulisan, silahkan login dengan email:
-            <strong> admin@email.com</strong> password:{" "}
-            <strong>admin123</strong>
-          </p>
-        </div>
-        <br />
-        <br />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (
             <div
@@ -136,9 +110,13 @@ export default function Home() {
               )}
               {showFullContent[post.id] && (
                 <>
-                  <p className="text-gray-500 mt-4">
-                    Ditulis oleh: {post.author}
-                  </p>
+                  <div className="text-gray-500 mt-4 flex items-center space-x-2">
+                    <span>Ditulis oleh: {post.author}</span>
+                    <span className="text-sm text-gray-400">|</span>
+                    <span className="text-sm">
+                      {new Date(post.updated_at).toLocaleDateString("id-ID")}
+                    </span>
+                  </div>
                   <button
                     onClick={() => toggleContent(post.id)}
                     className="mt-4 text-red-500 hover:underline"
