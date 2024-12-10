@@ -1,7 +1,7 @@
 // src/app/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { FaLeaf } from "react-icons/fa";
 
@@ -21,6 +21,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const postsPerPage = 6;
+  const pageTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -39,6 +40,11 @@ export default function Home() {
         .order("id", { ascending: false });
 
       setPosts(data || []);
+
+      // Scroll to top of the page
+      if (pageTopRef.current) {
+        pageTopRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     };
 
     fetchPosts();
@@ -78,6 +84,9 @@ export default function Home() {
 
   return (
     <div className="bg-gray-100 min-h-screen">
+      {/* Reference point for scrolling */}
+      <div ref={pageTopRef}></div>
+
       <div className="container mx-auto px-4 py-10">
         <h1 className="text-4xl font-bold text-center text-green-800 mb-8">
           Bagikan Perjalanan Spiritual Anda
