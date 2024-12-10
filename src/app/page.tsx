@@ -9,7 +9,8 @@ interface Post {
   id: number;
   title: string;
   content: string;
-  author: string; // Menambahkan properti author
+  author: string;
+  updated_at: string; // Pastikan untuk menambahkan ini
 }
 
 export default function Home() {
@@ -17,21 +18,62 @@ export default function Home() {
   const [showFullContent, setShowFullContent] = useState<{
     [key: number]: boolean;
   }>({});
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const postsPerPage = 6;
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const { data } = await supabase.from("posts").select("*");
-      setPosts(data || []); // Pastikan data tidak null
+      const { count } = await supabase
+        .from("posts")
+        .select("*", { count: "exact" });
+
+      const totalPostCount = count || 0;
+      const calculatedTotalPages = Math.ceil(totalPostCount / postsPerPage);
+      setTotalPages(calculatedTotalPages);
+
+      const { data } = await supabase
+        .from("posts")
+        .select("*")
+        .range((currentPage - 1) * postsPerPage, currentPage * postsPerPage - 1)
+        .order("id", { ascending: false });
+
+      setPosts(data || []);
     };
 
     fetchPosts();
-  }, []);
+  }, [currentPage]);
 
   const toggleContent = (id: number) => {
     setShowFullContent((prev) => ({
       ...prev,
-      [id]: !prev[id], // Toggle state untuk post tertentu
+      [id]: !prev[id],
     }));
+  };
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    setShowFullContent({});
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`mx-1 px-3 py-1 rounded ${
+            currentPage === i
+              ? "bg-green-600 text-white"
+              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pageNumbers;
   };
 
   return (
@@ -44,19 +86,6 @@ export default function Home() {
           &quot;Setiap langkah dalam perjalanan ini adalah kesempatan untuk
           menemukan diri kita yang sejati.&quot;
         </p>
-        <div className="w-full md:w-1/4 bg-white rounded-lg shadow-md p-4 ml-4 mt-4 md:mt-0">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">
-            Instruksi Login
-          </h2>
-          <p className="text-left text-gray-600 mb-2 italic">
-            Anda bebas menulis apa saja cerita spiritual journey anda, Untuk
-            menambahkan tulisan, silahkan login dengan email:
-            <strong> admin@email.com</strong> password:{" "}
-            <strong>admin123</strong>
-          </p>
-        </div>
-        <br />
-        <br />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (
             <div
@@ -84,8 +113,12 @@ export default function Home() {
                   <p className="text-gray-500 mt-4">
                     Ditulis oleh: {post.author}
                   </p>
+                  <p className="text-gray-500 mb-2">
+                    Tanggal:{" "}
+                    {new Date(post.updated_at).toLocaleDateString("id-ID")}
+                  </p>
                   <button
-                    onClick={() => toggleContent(post.id)} // Menggunakan fungsi yang sama untuk toggle
+                    onClick={() => toggleContent(post.id)}
                     className="mt-4 text-red-500 hover:underline"
                   >
                     Kembali
@@ -95,6 +128,12 @@ export default function Home() {
             </div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center mt-8">
+          <div className="flex space-x-2">{renderPageNumbers()}</div>
+        </div>
+
         <div className="mt-10 text-center">
           <FaLeaf className="text-4xl text-green-600 mx-auto mb-2" />
           <p className="text-gray-500">Embrace Your Spiritual Journey</p>
