@@ -64,21 +64,104 @@ export default function Home() {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
+    const maxPagesToShow = 5;
+
+    // Helper function to add page number buttons
+    const addPageButton = (page: number) => {
       pageNumbers.push(
         <button
-          key={i}
-          onClick={() => handlePageChange(i)}
+          key={page}
+          onClick={() => handlePageChange(page)}
           className={`mx-1 px-3 py-1 rounded ${
-            currentPage === i
+            currentPage === page
               ? "bg-green-600 text-white"
               : "bg-gray-200 text-gray-800 hover:bg-gray-300"
           }`}
         >
-          {i}
+          {page}
+        </button>
+      );
+    };
+
+    // Previous button
+    if (currentPage > 1) {
+      pageNumbers.push(
+        <button
+          key="prev"
+          onClick={() => handlePageChange(currentPage - 1)}
+          className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+        >
+          &laquo;
         </button>
       );
     }
+
+    // Logic for rendering page numbers efficiently
+    if (totalPages <= maxPagesToShow) {
+      // If total pages are 5 or less, show all
+      for (let i = 1; i <= totalPages; i++) {
+        addPageButton(i);
+      }
+    } else {
+      // More complex rendering for many pages
+      if (currentPage <= 3) {
+        // Show first 4 pages and last page with ellipsis
+        for (let i = 1; i <= 4; i++) {
+          addPageButton(i);
+        }
+        pageNumbers.push(
+          <span key="ellipsis-end" className="mx-1 text-gray-600">
+            ...
+          </span>
+        );
+        addPageButton(totalPages);
+      } else if (currentPage > totalPages - 3) {
+        // Show first page, ellipsis, and last 4 pages
+        addPageButton(1);
+        pageNumbers.push(
+          <span key="ellipsis-start" className="mx-1 text-gray-600">
+            ...
+          </span>
+        );
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          addPageButton(i);
+        }
+      } else {
+        // Show first page, ellipsis, current page and surrounding, last page
+        addPageButton(1);
+        pageNumbers.push(
+          <span key="ellipsis-start" className="mx-1 text-gray-600">
+            ...
+          </span>
+        );
+
+        // Show current page and its neighbors
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          addPageButton(i);
+        }
+
+        pageNumbers.push(
+          <span key="ellipsis-end" className="mx-1 text-gray-600">
+            ...
+          </span>
+        );
+        addPageButton(totalPages);
+      }
+    }
+
+    // Next button
+    if (currentPage < totalPages) {
+      pageNumbers.push(
+        <button
+          key="next"
+          onClick={() => handlePageChange(currentPage + 1)}
+          className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+        >
+          &raquo;
+        </button>
+      );
+    }
+
     return pageNumbers;
   };
 
@@ -140,7 +223,9 @@ export default function Home() {
 
         {/* Pagination Controls */}
         <div className="flex justify-center items-center mt-8">
-          <div className="flex space-x-2">{renderPageNumbers()}</div>
+          <div className="flex space-x-2 items-center">
+            {renderPageNumbers()}
+          </div>
         </div>
 
         <div className="mt-10 text-center">
