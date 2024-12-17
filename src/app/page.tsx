@@ -172,7 +172,7 @@ export default function Home() {
 
       <div className="container mx-auto px-4 py-10">
         <h1 className="text-4xl font-bold text-center text-green-800 mb-8">
-          Bagikan Perjalanan Spiritual Anda
+          Bagikan Perjalanan Spirituil Anda
         </h1>
         <p className="text-center text-gray-600 mb-6 italic">
           &quot;Setiap langkah dalam perjalanan ini adalah kesempatan untuk
@@ -230,7 +230,7 @@ export default function Home() {
 
         <div className="mt-10 text-center">
           <FaLeaf className="text-4xl text-green-600 mx-auto mb-2" />
-          <p className="text-gray-500">Embrace Your Spiritual Journey</p>
+          <p className="text-gray-500">Embrace Your Spirituil Journey</p>
         </div>
         <div className="mt-10 text-center">
           <p className="text-lg text-gray-700 italic">

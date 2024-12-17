@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {/* Logo */}
               <div className="flex items-center space-x-2 text-green-800">
                 <FaLeaf className="text-2xl" />
-                <span className="text-xl font-bold">Spiritual Journey</span>
+                <span className="text-xl font-bold">Spirituil Journey</span>
               </div>
 
               {/* Navigation Links */}
@@ -54,10 +54,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="flex items-center space-x-2 text-green-800 mb-4 md:mb-0">
                 <FaLeaf className="text-2xl" />
-                <span className="font-bold">Spiritual Journey</span>
+                <span className="font-bold">Spirituil Journey</span>
               </div>
               <p className="text-gray-600">
-                © 2024 Spiritual Journey. Embrace Your Inner Path. <br />
+                © 2024 Spirituil Journey. Embrace Your Inner Path. <br />
                 by Ricknzm
               </p>
               <div className="flex space-x-4 mt-4 md:mt-0">

@@ -96,7 +96,7 @@ export default function Admin() {
       </form>
       <div className="mt-10 text-center">
         <FaLeaf className="text-4xl text-green-600 mx-auto mb-2" />
-        <p className="text-gray-500">Embrace Your Spiritual Journey</p>
+        <p className="text-gray-500">Embrace Your Spirituil Journey</p>
       </div>
     </div>
   );
